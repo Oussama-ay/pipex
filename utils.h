@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 18:42:46 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/01/02 12:59:57 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/01/04 19:02:23 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,15 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <stdlib.h>
+# include <wait.h>
 # include "ft_printf.h"
+
+typedef struct	s_pipe_data
+{
+	int		input_fd;
+	int		output_fd;
+	int		is_last;
+}	t_pipe_data;
 
 /*  utils_strings.c  */
 char	**ft_split(char const *s, char c);
@@ -35,11 +43,10 @@ char	*ft_strdup(const char *s);
 /*  utils_1.c  */
 void	close_all(int *pipefd, int input_fd, int output_fd);
 char	*find_path(char **env);
-char	*get_path(char *cmd, char *paths);
 int		execute_cmd(char *cmd, char **env);
+void	print_error(char *msg, char *arg);
 
 /*  utils_2.c  */
-void	print_error(char *msg);
 void	print_str(char *str, int fd);
 void	do_pipe(int input_fd, int output_fd, char *cmd, char **env);
 int		open_file(char *file, int flag);

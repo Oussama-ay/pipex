@@ -6,13 +6,13 @@
 #    By: oayyoub <oayyoub@student.1337.ma>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/28 22:25:37 by oayyoub           #+#    #+#              #
-#    Updated: 2025/01/02 10:54:33 by oayyoub          ###   ########.fr        #
+#    Updated: 2025/01/04 18:57:02 by oayyoub          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 
-CC = cc  -g
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 BGreen = \033[1;32m
@@ -22,9 +22,9 @@ BPurple = \033[1;38;5;205m
 BRed = \033[1;31m
 RESET = \033[0m
 
-UTILS = ft_split.c utils_1.c utils_2.c utils_strings.c ft_printf.c
+UTILS = ft_split.c utils_1.c utils_2.c utils_strings.c ft_printf.c get_next_line_utils_bonus.c
 MANDATORY = pipex.c
-BONUS = pipex_bonus.c get_next_line_bonus.c get_next_line_utils_bonus.c
+BONUS = pipex_bonus.c get_next_line_bonus.c 
 BONUS_FLAG = .bonus
 
 OBJ = $(MANDATORY:.c=.o) $(UTILS:.c=.o)
