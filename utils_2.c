@@ -84,7 +84,7 @@ void	cat_and_execute(char **av, char **env)
         if (pipe(dummy_pipefd) == -1)
             print_error("Error: (pipe)", NULL);
         data.input_fd = dummy_pipefd[0];
-        close(dummy_pipefd[1]); // Close the write end of the dummy pipe
+        close(dummy_pipefd[1]);
     }
 	data.is_last = 0;
 	i = 2;
@@ -93,7 +93,8 @@ void	cat_and_execute(char **av, char **env)
 		if (pipe(pipefd) == -1)
 			print_error("Error: (pipe)", NULL);
 		data.output_fd = pipefd[1];
-		fork_and_execute(&data, av[i], env);
+		if (data.input_fd != -1)
+			fork_and_execute(&data, av[i], env);
 		close(pipefd[1]);
 		data.input_fd = pipefd[0];
 		i++;
