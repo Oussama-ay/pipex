@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 18:42:46 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/01/04 19:02:23 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/01/23 21:13:43 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define UTILS_H
 
 # include <unistd.h>
-# include <stdio.h>
 # include <sys/types.h>
 # include <fcntl.h>
 # include <string.h>
@@ -23,7 +22,7 @@
 # include <wait.h>
 # include "ft_printf.h"
 
-typedef struct	s_pipe_data
+typedef struct s_pipe_data
 {
 	int		input_fd;
 	int		output_fd;
@@ -47,9 +46,7 @@ int		execute_cmd(char *cmd, char **env);
 void	print_error(char *msg, char *arg);
 
 /*  utils_2.c  */
-void	print_str(char *str, int fd);
-void	do_pipe(int input_fd, int output_fd, char *cmd, char **env);
-int		open_file(char *file, int flag);
-void	cat_and_execute(char **av, char **env);
+int		open_file(char *file, int flag, int b);
+void	cat_and_execute(char **av, char **env, int bonus);
 
 #endif

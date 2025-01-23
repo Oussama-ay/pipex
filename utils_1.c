@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: oayyoub <oayyoub@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 18:47:48 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/01/04 22:51:07 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/01/17 14:34:40 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,7 @@ char	*get_path(char **cmd, char *paths)
 
 	if (!paths || !*cmd)
 		return (NULL);
-	s_paths = ft_split(paths, ':');
-	i = 0;
+	(1) && (s_paths = ft_split(paths, ':'), i = 0);
 	while (s_paths[i])
 	{
 		s_paths[i] = ft_strjoin(s_paths[i], "/");
@@ -53,17 +52,15 @@ char	*get_path(char **cmd, char *paths)
 		i++;
 	}
 	i = 0;
-	while (paths[i])
+	while (s_paths[i])
 	{
 		tmp = ft_strdup(s_paths[i]);
 		if (access(tmp, X_OK | F_OK) == 0)
 			return (free_split(s_paths), tmp);
-		free(tmp);
-		i++;
+		(free(tmp), i++);
 	}
 	ft_printf("command not found: %s\n", *cmd);
-	free_split(cmd);
-	free_split(s_paths);
+	(1) && (free_split(cmd), free_split(s_paths));
 	exit(127);
 	return (NULL);
 }

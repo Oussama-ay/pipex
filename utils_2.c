@@ -6,43 +6,36 @@
 /*   By: oayyoub <oayyoub@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/01 10:58:18 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/01/04 22:54:56 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/01/23 21:13:13 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 
-void	fork_and_execute(t_pipe_data *data, char *cmd, char **env)
+int	fork_and_execute(t_pipe_data *data, char *cmd, char **env, int next_in)
 {
 	pid_t	cpid;
-	int		status;
 
 	cpid = fork();
-	if (cpid == -1)
-		print_error("Error: (fork) no child process is created", NULL);
 	if (cpid == 0)
 	{
-		if (dup2(data->input_fd, 0) == -1)
-			print_error("Error: (dup2) input_fd", NULL);
-		if (dup2(data->output_fd, 1) == -1)
-			print_error("Error: (dup2) output_fd", NULL);
+		dup2(data->input_fd, STDIN_FILENO);
+		dup2(data->output_fd, STDOUT_FILENO);
+		close(data->input_fd);
+		close(data->output_fd);
+		if (next_in != -1)
+			close(next_in);
 		execute_cmd(cmd, env);
 	}
 	else
 	{
-		(1) && (close(data->input_fd), close(data->output_fd));
-		waitpid(cpid, &status, 0);
-		if (data->is_last)
-		{
-			if (WIFEXITED(status))
-				exit(WEXITSTATUS(status));
-			else
-				exit(127);
-		}
+		close(data->input_fd);
+		close(data->output_fd);
 	}
+	return (cpid);
 }
 
-int	open_file(char *file, int flag)
+int	open_file(char *file, int flag, int bonus)
 {
 	int	fd;
 
@@ -59,48 +52,60 @@ int	open_file(char *file, int flag)
 		if (access(file, F_OK) != -1)
 		{
 			if (access(file, W_OK) == -1)
-				exit ((ft_printf("permission denied: %s\n", file), 1));
-			fd = open(file, O_WRONLY | O_TRUNC);
+				return ((ft_printf("permission denied: %s\n", file), -1));
+			if (bonus)
+				fd = open(file, O_WRONLY | O_APPEND);
+			else
+				fd = open(file, O_WRONLY | O_TRUNC);
 		}
 		else
 			fd = open(file, O_WRONLY | O_CREAT, 0644);
 	}
-	if (fd == -1)
-		print_error("error opening file: %s", file);
 	return (fd);
 }
 
-void	cat_and_execute(char **av, char **env)
+static void	handle_last_command(t_pipe_data *data, char **av, char **env, int b)
 {
-	t_pipe_data data;
-    int pipefd[2];
-    int dummy_pipefd[2];
-    int i;
+	int		out_error;
+	int		status;
+	pid_t	last_pid;
 
-    data.input_fd = open_file(av[1], 0);
-    if (data.input_fd == -1)
-    {
-        // Create a dummy pipe to simulate the input
-        if (pipe(dummy_pipefd) == -1)
-            print_error("Error: (pipe)", NULL);
-        data.input_fd = dummy_pipefd[0];
-        close(dummy_pipefd[1]);
-    }
-	data.is_last = 0;
-	i = 2;
-	while (av[i + 2])
+	data->output_fd = open_file(av[1], 1, b);
+	if (data->output_fd == -1)
 	{
-		if (pipe(pipefd) == -1)
-			print_error("Error: (pipe)", NULL);
+		data->output_fd = open("/dev/null", O_WRONLY);
+		out_error = 1;
+	}
+	else
+		out_error = 0;
+	last_pid = fork_and_execute(data, av[0], env, -1);
+	waitpid(last_pid, &status, 0);
+	while (wait(NULL) > 0)
+		;
+	if (out_error)
+		exit(1);
+	exit(WEXITSTATUS(status));
+}
+
+void	cat_and_execute(char **av, char **env, int b)
+{
+	t_pipe_data	data;
+	int			pipefd[2];
+	int			i;
+
+	data.input_fd = open_file(av[1], 0, b);
+	if (data.input_fd == -1)
+		data.input_fd = open("/dev/null", O_RDONLY);
+	i = 2;
+	while (av[i + 2] != NULL)
+	{
+		pipe(pipefd);
 		data.output_fd = pipefd[1];
-		if (data.input_fd != -1)
-			fork_and_execute(&data, av[i], env);
-		close(pipefd[1]);
+		fork_and_execute(&data, av[i], env, pipefd[0]);
 		data.input_fd = pipefd[0];
 		i++;
 	}
-	data.output_fd = open_file(av[i + 1], 1);
-	data.is_last = 1;
-	fork_and_execute(&data, av[i], env);
-	close_all(pipefd, data.input_fd, data.output_fd);
+	if (b)
+		unlink(av[1]);
+	handle_last_command(&data, av + i, env, b);
 }
