@@ -36,7 +36,7 @@ static void	here_doc(char **av, char **env)
 	if (container)
 	{
 		print_str(container, input_fd);
-		free(container);
+		(free(container), close(input_fd));
 	}
 	cat_and_execute(av + 1, env, 1);
 }
