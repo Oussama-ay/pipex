@@ -12,12 +12,12 @@
 
 #include "utils.h"
 
-int	fork_and_execute(t_pipe_data *data, char *cmd, char **env, int next_in)
+pid_t	fork_and_execute(t_pipe_data *data, char *cmd, char **env, int next_in)
 {
-	pid_t	cpid;
+	pid_t	pid;
 
-	cpid = fork();
-	if (cpid == 0)
+	pid = fork();
+	if (pid == 0)
 	{
 		dup2(data->input_fd, STDIN_FILENO);
 		dup2(data->output_fd, STDOUT_FILENO);
@@ -32,7 +32,7 @@ int	fork_and_execute(t_pipe_data *data, char *cmd, char **env, int next_in)
 		close(data->input_fd);
 		close(data->output_fd);
 	}
-	return (cpid);
+	return (pid);
 }
 
 int	open_file(char *file, int flag, int bonus)
