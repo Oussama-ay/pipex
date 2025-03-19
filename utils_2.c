@@ -68,24 +68,14 @@ int	open_file(char *file, int flag, int bonus)
 
 static void	handle_last_command(t_pipe_data *data, char **av, char **env, int b)
 {
-	int		out_error;
 	int		status;
 	pid_t	last_pid;
 
 	data->output_fd = open_file(av[1], 1, b);
-	if (data->output_fd == -1)
-	{
-		data->output_fd = open("/dev/null", O_WRONLY);
-		out_error = 1;
-	}
-	else
-		out_error = 0;
 	last_pid = fork_and_execute(data, av[0], env, -1);
 	waitpid(last_pid, &status, 0);
 	while (wait(NULL) > 0)
 		;
-	if (out_error)
-		exit(1);
 	exit(WEXITSTATUS(status));
 }
 
