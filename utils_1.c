@@ -12,14 +12,6 @@
 
 #include "utils.h"
 
-void	close_all(int *pipefd, int input_fd, int output_fd)
-{
-	close(pipefd[0]);
-	close(pipefd[1]);
-	close(input_fd);
-	close(output_fd);
-}
-
 char	*find_path(char **env)
 {
 	int	i;
