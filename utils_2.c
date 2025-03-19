@@ -19,6 +19,8 @@ pid_t	fork_and_execute(t_pipe_data *data, char *cmd, char **env, int next_in)
 	pid = fork();
 	if (pid == 0)
 	{
+		if (data->input_fd < 0 || data->output_fd < 0)
+			exit(1);
 		dup2(data->input_fd, STDIN_FILENO);
 		dup2(data->output_fd, STDOUT_FILENO);
 		close(data->input_fd);
