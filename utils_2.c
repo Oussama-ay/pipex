@@ -86,8 +86,6 @@ void	cat_and_execute(char **av, char **env, int b)
 	int			i;
 
 	data.input_fd = open_file(av[1], 0, b);
-	if (data.input_fd == -1)
-		data.input_fd = open("/dev/null", O_RDONLY);
 	i = 2;
 	while (av[i + 2] != NULL)
 	{
