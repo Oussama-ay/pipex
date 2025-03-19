@@ -40,7 +40,6 @@ char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strdup(const char *s);
 
 /*  utils_1.c  */
-void	close_all(int *pipefd, int input_fd, int output_fd);
 char	*find_path(char **env);
 int		execute_cmd(char *cmd, char **env);
 void	print_error(char *msg, char *arg);
