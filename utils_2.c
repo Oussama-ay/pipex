@@ -29,11 +29,8 @@ pid_t	fork_and_execute(t_pipe_data *data, char *cmd, char **env, int next_in)
 			close(next_in);
 		execute_cmd(cmd, env);
 	}
-	else
-	{
-		close(data->input_fd);
-		close(data->output_fd);
-	}
+	close(data->input_fd);
+	close(data->output_fd);
 	return (pid);
 }
 
