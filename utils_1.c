@@ -6,7 +6,7 @@
 /*   By: oayyoub <oayyoub@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/30 18:47:48 by oayyoub           #+#    #+#             */
-/*   Updated: 2025/01/17 14:34:40 by oayyoub          ###   ########.fr       */
+/*   Updated: 2025/04/29 15:01:30 by oayyoub          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,17 @@ char	*get_path(char **cmd, char *paths)
 	char	*tmp;
 	char	**s_paths;
 
-	if (!paths || !*cmd)
+	if (!*cmd)
 		return (NULL);
 	(1) && (s_paths = ft_split(paths, ':'), i = 0);
-	while (s_paths[i])
+	while (paths && s_paths[i])
 	{
 		s_paths[i] = ft_strjoin(s_paths[i], "/");
 		s_paths[i] = ft_strjoin(s_paths[i], *cmd);
 		i++;
 	}
 	i = 0;
-	while (s_paths[i])
+	while (paths && s_paths[i])
 	{
 		tmp = ft_strdup(s_paths[i]);
 		if (access(tmp, X_OK | F_OK) == 0)
